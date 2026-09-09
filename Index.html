@@ -1,0 +1,3350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ClassroomOS — Grade 7 Teacher Workspace</title>
+
+<style>
+/* =========================================================
+   CLASSROOMOS
+   Professional Grade 7 Teacher Dashboard
+   ========================================================= */
+
+:root {
+    --bg: #080b14;
+    --bg2: #0e1321;
+    --panel: rgba(18, 24, 40, .86);
+    --panel-solid: #121827;
+    --panel-light: #1a2134;
+    --text: #f5f7ff;
+    --muted: #98a2bc;
+    --border: rgba(255,255,255,.09);
+
+    --accent: #7567f8;
+    --accent2: #9b8cff;
+
+    --math: #7667f8;
+    --english: #3c9cff;
+    --science: #31c98b;
+    --stem: #ff9f43;
+    --history: #ed5b67;
+
+    --radius: 20px;
+
+    --font: Inter, Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font);
+    background:
+        radial-gradient(circle at 10% 0%, rgba(118,103,248,.18), transparent 30%),
+        radial-gradient(circle at 90% 100%, rgba(49,201,139,.08), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   BACKGROUND SUBJECT SLIDESHOW
+   ========================================================= */
+
+.background-slideshow {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.subject-float {
+    position: absolute;
+    width: 190px;
+    height: 130px;
+    border-radius: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    font-weight: 800;
+    font-size: 16px;
+
+    opacity: .055;
+    filter: blur(.2px);
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    animation:
+        floatSubject 22s infinite ease-in-out,
+        moveAcross 38s infinite linear;
+}
+
+.subject-float span {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+.math-bg {
+    background: var(--math);
+}
+
+.english-bg {
+    background: var(--english);
+}
+
+.science-bg {
+    background: var(--science);
+}
+
+.stem-bg {
+    background: var(--stem);
+}
+
+.history-bg {
+    background: var(--history);
+}
+
+.s1 { top: 8%; left: -210px; animation-delay: 0s; }
+.s2 { top: 27%; left: -300px; animation-delay: 5s; }
+.s3 { top: 48%; left: -180px; animation-delay: 10s; }
+.s4 { top: 69%; left: -280px; animation-delay: 15s; }
+.s5 { top: 86%; left: -190px; animation-delay: 20s; }
+
+@keyframes moveAcross {
+    from {
+        transform: translateX(0) rotate(-2deg);
+    }
+
+    to {
+        transform: translateX(calc(100vw + 500px)) rotate(2deg);
+    }
+}
+
+@keyframes floatSubject {
+    0%, 100% {
+        margin-top: 0;
+    }
+
+    50% {
+        margin-top: 25px;
+    }
+}
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
+
+.app {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
+    width: 255px;
+    min-height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    padding: 22px 15px;
+
+    background: rgba(10,14,25,.9);
+    border-right: 1px solid var(--border);
+
+    backdrop-filter: blur(20px);
+
+    z-index: 20;
+}
+
+.logo {
+    padding: 5px 12px 25px;
+}
+
+.logo-name {
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -.8px;
+}
+
+.logo-name span {
+    color: var(--accent2);
+}
+
+.logo-subtitle {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.nav-title {
+    color: #68738d;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 14px 12px 7px;
+}
+
+.nav-item {
+    width: 100%;
+    border: 0;
+    background: transparent;
+
+    color: #9da7c0;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    padding: 11px 12px;
+    border-radius: 11px;
+
+    margin-bottom: 3px;
+
+    text-align: left;
+    font-size: 13px;
+
+    transition: .18s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(117,103,248,.13);
+    color: white;
+}
+
+.nav-item.active {
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.nav-icon {
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.sidebar-bottom {
+    position: absolute;
+    bottom: 18px;
+    left: 15px;
+    right: 15px;
+}
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px;
+
+    background: rgba(255,255,255,.035);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: linear-gradient(135deg, var(--accent), #a58cff);
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.profile-info {
+    min-width: 0;
+}
+
+.profile-name {
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-role {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main {
+    margin-left: 255px;
+    width: calc(100% - 255px);
+
+    padding: 24px 30px 50px;
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar {
+    height: 58px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.breadcrumb {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.breadcrumb strong {
+    color: white;
+}
+
+.top-actions {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+}
+
+.icon-button {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+    border: 1px solid var(--border);
+
+    background: rgba(255,255,255,.035);
+
+    color: #cdd4e9;
+}
+
+.icon-button:hover {
+    background: rgba(255,255,255,.08);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 32px;
+
+    border: 1px solid var(--border);
+    border-radius: 25px;
+
+    background:
+        linear-gradient(120deg, rgba(117,103,248,.18), transparent 60%),
+        var(--panel);
+
+    backdrop-filter: blur(18px);
+
+    margin-bottom: 25px;
+}
+
+.hero::after {
+    content: "";
+
+    position: absolute;
+    width: 300px;
+    height: 300px;
+
+    right: -100px;
+    top: -130px;
+
+    border-radius: 50%;
+
+    background: rgba(117,103,248,.13);
+    filter: blur(10px);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.eyebrow {
+    color: #9f94ff;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    margin-bottom: 9px;
+}
+
+.hero h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    letter-spacing: -1.5px;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    color: var(--muted);
+    max-width: 650px;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
+
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    margin-top: 22px;
+}
+
+.quick-button {
+    padding: 10px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.04);
+    color: #dce1f0;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    transition: .2s;
+}
+
+.quick-button:hover {
+    background: rgba(117,103,248,.15);
+    border-color: rgba(117,103,248,.4);
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.section {
+    margin-top: 30px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.section-description {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* =========================================================
+   SUBJECT CARDS
+   ========================================================= */
+
+.subject-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 13px;
+}
+
+.subject-card {
+    position: relative;
+    overflow: hidden;
+
+    min-height: 175px;
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    background: var(--panel);
+
+    padding: 18px;
+
+    transition: .25s;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(15px);
+}
+
+.subject-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255,255,255,.17);
+    box-shadow: 0 18px 40px rgba(0,0,0,.22);
+}
+
+.subject-icon {
+    width: 47px;
+    height: 47px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 23px;
+
+    margin-bottom: 18px;
+}
+
+.math {
+    background: rgba(118,103,248,.15);
+    color: #a99fff;
+}
+
+.english {
+    background: rgba(60,156,255,.13);
+    color: #70b6ff;
+}
+
+.science {
+    background: rgba(49,201,139,.13);
+    color: #59e5ab;
+}
+
+.stem {
+    background: rgba(255,159,67,.13);
+    color: #ffb46e;
+}
+
+.history {
+    background: rgba(237,91,103,.13);
+    color: #ff8994;
+}
+
+.subject-card h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+.subject-card p {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    margin-top: 13px;
+}
+
+.topic {
+    color: #aeb7cd;
+    font-size: 9px;
+
+    padding: 4px 6px;
+
+    background: rgba(255,255,255,.04);
+    border-radius: 6px;
+}
+
+/* =========================================================
+   RESOURCE CARDS
+   ========================================================= */
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.resource-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    text-decoration: none;
+
+    color: white;
+
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    padding: 17px;
+
+    background: var(--panel);
+
+    transition: .2s;
+}
+
+.resource-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,.17);
+    background: #171e30;
+}
+
+.resource-logo {
+    width: 55px;
+    height: 55px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 27px;
+    font-weight: 950;
+}
+
+.rocori-logo {
+    background: #111;
+    color: #e62432;
+    border: 2px solid #e62432;
+}
+
+.schoology-logo {
+    background: #1264a3;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.classwise-logo {
+    background: linear-gradient(135deg,#5c50dd,#8f79ff);
+    color: white;
+}
+
+.resource-info h3 {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.resource-info p {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+/* =========================================================
+   AI CENTER
+   ========================================================= */
+
+.ai-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 13px;
+}
+
+.ai-card {
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    padding: 18px;
+
+    background:
+        linear-gradient(140deg, rgba(117,103,248,.08), transparent),
+        var(--panel);
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.ai-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(117,103,248,.35);
+}
+
+.ai-card-icon {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.ai-card h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.ai-card p {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.7);
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 100;
+
+    padding: 20px;
+}
+
+.modal-backdrop.show {
+    display: flex;
+}
+
+.modal {
+    width: min(700px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+
+    background: #111827;
+
+    border: 1px solid var(--border);
+    border-radius: 23px;
+
+    padding: 25px;
+
+    box-shadow: 0 30px 100px rgba(0,0,0,.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+
+    margin-bottom: 22px;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+}
+
+.modal-header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.close {
+    width: 35px;
+    height: 35px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: rgba(255,255,255,.06);
+    color: white;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 11px;
+    color: #aeb7ce;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+
+    padding: 12px 13px;
+
+    border: 1px solid #303950;
+    border-radius: 11px;
+
+    background: #0b101d;
+    color: white;
+
+    outline: none;
+}
+
+.form-textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+    border-color: var(--accent);
+}
+
+.primary-button {
+    width: 100%;
+
+    padding: 13px;
+
+    border: 0;
+    border-radius: 11px;
+
+    background: linear-gradient(135deg,#6557ed,#917aff);
+
+    color: white;
+
+    font-weight: 800;
+
+    margin-top: 5px;
+}
+
+.secondary-button {
+    padding: 11px 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.04);
+    color: white;
+}
+
+/* =========================================================
+   SUBJECT DETAIL MODAL
+   ========================================================= */
+
+.subject-top {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+}
+
+.subject-big-icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    font-size: 26px;
+}
+
+.detail-topics {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 10px;
+}
+
+.detail-topic {
+    padding: 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.03);
+}
+
+.detail-topic strong {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.detail-topic span {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* =========================================================
+   CUSTOMIZATION
+   ========================================================= */
+
+.font-options {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 8px;
+}
+
+.font-option {
+    padding: 12px;
+
+    background: #0b101d;
+
+    border: 1px solid #303950;
+    border-radius: 10px;
+
+    color: white;
+
+    text-align: left;
+}
+
+.font-option.active {
+    border-color: var(--accent);
+    background: rgba(117,103,248,.1);
+}
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 200;
+
+    background:
+        radial-gradient(circle at 50% 0%, rgba(117,103,248,.2), transparent 40%),
+        #080b14;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.auth-overlay.show {
+    display: flex;
+}
+
+.auth-box {
+    width: min(440px,100%);
+
+    padding: 32px;
+
+    border-radius: 24px;
+
+    background: rgba(18,24,40,.95);
+
+    border: 1px solid var(--border);
+
+    box-shadow: 0 30px 100px rgba(0,0,0,.45);
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.auth-logo h1 {
+    font-size: 28px;
+}
+
+.auth-logo span {
+    color: var(--accent2);
+}
+
+.auth-logo p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    padding: 4px;
+
+    background: #0b101d;
+
+    border-radius: 11px;
+
+    margin-bottom: 20px;
+}
+
+.auth-tab {
+    padding: 10px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    font-weight: 700;
+}
+
+.auth-tab.active {
+    background: #1d2538;
+    color: white;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 300;
+
+    padding: 13px 17px;
+
+    border-radius: 12px;
+
+    background: #171f32;
+    border: 1px solid var(--border);
+
+    color: white;
+
+    box-shadow: 0 15px 40px rgba(0,0,0,.35);
+
+    transform: translateY(100px);
+    opacity: 0;
+
+    transition: .25s;
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+.mobile-menu {
+    display: none;
+}
+
+@media(max-width:1100px) {
+
+    .subject-grid {
+        grid-template-columns: repeat(3,1fr);
+    }
+
+    .resources-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+}
+
+@media(max-width:800px) {
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: .25s;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 18px;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+
+    .subject-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:560px) {
+
+    .hero {
+        padding: 23px;
+    }
+
+    .subject-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-topics {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     MOVING BACKGROUND SUBJECT CARDS
+     ========================================================= -->
+
+<div class="background-slideshow">
+
+    <div class="subject-float math-bg s1">
+        <span>➗</span>
+        PRE-ALGEBRA
+    </div>
+
+    <div class="subject-float english-bg s2">
+        <span>📖</span>
+        ENGLISH
+    </div>
+
+    <div class="subject-float science-bg s3">
+        <span>🧬</span>
+        LIFE SCIENCE
+    </div>
+
+    <div class="subject-float stem-bg s4">
+        <span>⚙️</span>
+        STEM
+    </div>
+
+    <div class="subject-float history-bg s5">
+        <span>🇺🇸</span>
+        US STUDIES
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     APPLICATION
+     ========================================================= -->
+
+<div class="app">
+
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-name">
+            Classroom<span>OS</span>
+        </div>
+
+        <div class="logo-subtitle">
+            Grade 7 Teacher Workspace
+        </div>
+
+    </div>
+
+
+    <div class="nav-title">
+        Workspace
+    </div>
+
+    <button class="nav-item active" onclick="scrollToTop()">
+        <span class="nav-icon">🏠</span>
+        Dashboard
+    </button>
+
+    <button class="nav-item" onclick="openAI()">
+        <span class="nav-icon">🤖</span>
+        AI Teaching Center
+    </button>
+
+    <button class="nav-item" onclick="openModal('lessonModal')">
+        <span class="nav-icon">📅</span>
+        Lesson Planner
+    </button>
+
+    <button class="nav-item" onclick="openModal('assignmentModal')">
+        <span class="nav-icon">📝</span>
+        Assignments
+    </button>
+
+    <button class="nav-item" onclick="openModal('rubricModal')">
+        <span class="nav-icon">📊</span>
+        Rubrics
+    </button>
+
+
+    <div class="nav-title">
+        Subjects
+    </div>
+
+    <button class="nav-item" onclick="openSubject('Pre-Algebra')">
+        <span class="nav-icon">➗</span>
+        Pre-Algebra
+    </button>
+
+    <button class="nav-item" onclick="openSubject('English')">
+        <span class="nav-icon">📖</span>
+        English
+    </button>
+
+    <button class="nav-item" onclick="openSubject('Life Science')">
+        <span class="nav-icon">🧬</span>
+        Life Science
+    </button>
+
+    <button class="nav-item" onclick="openSubject('STEM')">
+        <span class="nav-icon">⚙️</span>
+        STEM
+    </button>
+
+    <button class="nav-item" onclick="openSubject('US Studies')">
+        <span class="nav-icon">🇺🇸</span>
+        US Studies
+    </button>
+
+
+    <div class="nav-title">
+        Resources
+    </div>
+
+    <button class="nav-item" onclick="document.getElementById('resources').scrollIntoView()">
+        <span class="nav-icon">🔗</span>
+        School Resources
+    </button>
+
+    <button class="nav-item" onclick="openModal('customizeModal')">
+        <span class="nav-icon">🎨</span>
+        Customize
+    </button>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="profile-mini">
+
+            <div class="avatar" id="avatar">
+                T
+            </div>
+
+            <div class="profile-info">
+
+                <div class="profile-name" id="profileName">
+                    Teacher
+                </div>
+
+                <div class="profile-role">
+                    Grade 7 Educator
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+     ========================================================= -->
+
+<main class="main" id="main">
+
+    <div class="topbar">
+
+        <div class="breadcrumb">
+            ClassroomOS / <strong>Dashboard</strong>
+        </div>
+
+        <div class="top-actions">
+
+            <button
+                class="icon-button mobile-menu"
+                onclick="toggleSidebar()"
+            >
+                ☰
+            </button>
+
+            <button
+                class="icon-button"
+                onclick="showToast('No new notifications')"
+            >
+                🔔
+            </button>
+
+            <button
+                class="icon-button"
+                onclick="openModal('customizeModal')"
+            >
+                ⚙️
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                Grade 7 • Teacher Workspace
+            </div>
+
+            <h1 id="welcomeMessage">
+                Good evening, Teacher.
+            </h1>
+
+            <p>
+                Everything you need to plan lessons, create assignments,
+                manage your subjects, and use AI to save time — all in one
+                professional workspace.
+            </p>
+
+
+            <div class="quick-actions">
+
+                <button
+                    class="quick-button"
+                    onclick="openAI()"
+                >
+                    ✨ Ask AI
+                </button>
+
+                <button
+                    class="quick-button"
+                    onclick="openModal('assignmentModal')"
+                >
+                    📝 New Assignment
+                </button>
+
+                <button
+                    class="quick-button"
+                    onclick="openModal('lessonModal')"
+                >
+                    📅 New Lesson
+                </button>
+
+                <button
+                    class="quick-button"
+                    onclick="openModal('rubricModal')"
+                >
+                    📊 Create Rubric
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SUBJECTS
+         ===================================================== -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    Your Subjects
+                </div>
+
+                <div class="section-description">
+                    Open a subject to view topics, tools, and AI assistance.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="subject-grid">
+
+
+            <!-- PRE-ALGEBRA -->
+
+            <div
+                class="subject-card"
+                onclick="openSubject('Pre-Algebra')"
+            >
+
+                <div class="subject-icon math">
+                    ➗
+                </div>
+
+                <h3>
+                    Pre-Algebra
+                </h3>
+
+                <p>
+                    Numbers, expressions, equations, ratios, geometry,
+                    probability, and data.
+                </p>
+
+                <div class="topic-list">
+
+                    <span class="topic">+ − × ÷</span>
+                    <span class="topic">Equations</span>
+                    <span class="topic">Fractions</span>
+                    <span class="topic">Geometry</span>
+                    <span class="topic">Ratios</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ENGLISH -->
+
+            <div
+                class="subject-card"
+                onclick="openSubject('English')"
+            >
+
+                <div class="subject-icon english">
+                    📖
+                </div>
+
+                <h3>
+                    English
+                </h3>
+
+                <p>
+                    Reading, writing, grammar, vocabulary, literature,
+                    evidence, and communication.
+                </p>
+
+                <div class="topic-list">
+
+                    <span class="topic">Grammar</span>
+                    <span class="topic">Essays</span>
+                    <span class="topic">Reading</span>
+                    <span class="topic">Vocabulary</span>
+                    <span class="topic">Writing</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SCIENCE -->
+
+            <div
+                class="subject-card"
+                onclick="openSubject('Life Science')"
+            >
+
+                <div class="subject-icon science">
+                    🧬
+                </div>
+
+                <h3>
+                    Life Science
+                </h3>
+
+                <p>
+                    Cells, genetics, ecosystems, organisms, energy,
+                    Earth systems, and scientific investigation.
+                </p>
+
+                <div class="topic-list">
+
+                    <span class="topic">Cells</span>
+                    <span class="topic">DNA</span>
+                    <span class="topic">Ecosystems</span>
+                    <span class="topic">Energy</span>
+                    <span class="topic">Labs</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- STEM -->
+
+            <div
+                class="subject-card"
+                onclick="openSubject('STEM')"
+            >
+
+                <div class="subject-icon stem">
+                    ⚙️
+                </div>
+
+                <h3>
+                    STEM
+                </h3>
+
+                <p>
+                    Engineering, coding, robotics, design thinking,
+                    technology, and problem solving.
+                </p>
+
+                <div class="topic-list">
+
+                    <span class="topic">Engineering</span>
+                    <span class="topic">Coding</span>
+                    <span class="topic">Robotics</span>
+                    <span class="topic">Design</span>
+                    <span class="topic">Projects</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- US STUDIES -->
+
+            <div
+                class="subject-card"
+                onclick="openSubject('US Studies')"
+            >
+
+                <div class="subject-icon history">
+                    🇺🇸
+                </div>
+
+                <h3>
+                    US Studies
+                </h3>
+
+                <p>
+                    American history, civics, government, geography,
+                    economics, and historical analysis.
+                </p>
+
+                <div class="topic-list">
+
+                    <span class="topic">History</span>
+                    <span class="topic">Civics</span>
+                    <span class="topic">Government</span>
+                    <span class="topic">Geography</span>
+                    <span class="topic">Primary Sources</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         AI CENTER
+         ===================================================== -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    AI Teaching Center
+                </div>
+
+                <div class="section-description">
+                    AI tools automatically use the subject and topic
+                    you're working on.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="ai-grid">
+
+
+            <div
+                class="ai-card"
+                onclick="openAI('assignment')"
+            >
+
+                <div class="ai-card-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Assignment Builder
+                </h3>
+
+                <p>
+                    Generate assignments, instructions, answer keys,
+                    rubrics, and extension activities.
+                </p>
+
+            </div>
+
+
+            <div
+                class="ai-card"
+                onclick="openAI('lesson')"
+            >
+
+                <div class="ai-card-icon">
+                    📚
+                </div>
+
+                <h3>
+                    Lesson Generator
+                </h3>
+
+                <p>
+                    Build complete lessons with objectives,
+                    activities, practice, and exit tickets.
+                </p>
+
+            </div>
+
+
+            <div
+                class="ai-card"
+                onclick="openAI('writing')"
+            >
+
+                <div class="ai-card-icon">
+                    ✍️
+                </div>
+
+                <h3>
+                    Sentence Touch-Up
+                </h3>
+
+                <p>
+                    Fix grammar, improve clarity, adjust grade level,
+                    or make teacher writing more professional.
+                </p>
+
+            </div>
+
+
+            <div
+                class="ai-card"
+                onclick="openAI('quiz')"
+            >
+
+                <div class="ai-card-icon">
+                    🧠
+                </div>
+
+                <h3>
+                    Quiz Generator
+                </h3>
+
+                <p>
+                    Create quizzes with multiple choice,
+                    short answer, and application questions.
+                </p>
+
+            </div>
+
+
+            <div
+                class="ai-card"
+                onclick="openAI('grade')"
+            >
+
+                <div class="ai-card-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Grade Assistant
+                </h3>
+
+                <p>
+                    Analyze student work using your rubric and
+                    suggest feedback for teacher review.
+                </p>
+
+            </div>
+
+
+            <div
+                class="ai-card"
+                onclick="openAI('differentiate')"
+            >
+
+                <div class="ai-card-icon">
+                    🎯
+                </div>
+
+                <h3>
+                    Differentiation
+                </h3>
+
+                <p>
+                    Create standard, supported, advanced, and
+                    scaffolded versions of assignments.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SCHOOL RESOURCES
+         ===================================================== -->
+
+    <section
+        class="section"
+        id="resources"
+    >
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    School Resources
+                </div>
+
+                <div class="section-description">
+                    Quick access to platforms and school resources.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="resources-grid">
+
+
+            <!-- ROCORI -->
+
+            <a
+                class="resource-card"
+                href="https://www.rocori.k12.mn.us/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+
+                <div class="resource-logo rocori-logo">
+                    R
+                </div>
+
+                <div class="resource-info">
+
+                    <h3>
+                        ROCORI School District
+                    </h3>
+
+                    <p>
+                        Official ROCORI school district website.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- SCHOOLOGY -->
+
+            <a
+                class="resource-card"
+                href="https://rocori.schoology.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+
+                <div class="resource-logo schoology-logo">
+                    S
+                </div>
+
+                <div class="resource-info">
+
+                    <h3>
+                        Schoology
+                    </h3>
+
+                    <p>
+                        Open the ROCORI Schoology learning platform.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- CLASSWISE -->
+
+            <a
+                class="resource-card"
+                href="https://classwise.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+
+                <div class="resource-logo classwise-logo">
+                    C
+                </div>
+
+                <div class="resource-info">
+
+                    <h3>
+                        Classwise
+                    </h3>
+
+                    <p>
+                        Open Classwise teaching and classroom tools.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+</div>
+
+
+<!-- =========================================================
+     AI MODAL
+     ========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="aiModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    🤖 AI Teaching Assistant
+                </h2>
+
+                <p id="aiContext">
+                    Ready to help with your classroom.
+                </p>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('aiModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                What do you need help with?
+            </label>
+
+            <textarea
+                class="form-textarea"
+                id="aiPrompt"
+                placeholder="Example: Create a 20-minute activity about solving two-step equations."
+            ></textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Detail Level
+            </label>
+
+            <select
+                class="form-select"
+                id="aiDetail"
+            >
+
+                <option>Quick</option>
+                <option selected>Detailed</option>
+                <option>Very Detailed</option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="primary-button"
+            onclick="runAI()"
+        >
+            ✨ Generate
+        </button>
+
+
+        <div
+            id="aiResult"
+            style="
+                display:none;
+                margin-top:18px;
+                padding:18px;
+                background:#0b101d;
+                border:1px solid var(--border);
+                border-radius:14px;
+                white-space:pre-wrap;
+                line-height:1.6;
+                color:#dce2f2;
+                font-size:13px;
+            "
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SUBJECT MODAL
+     ========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="subjectModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="subject-top">
+
+                <div
+                    class="subject-big-icon"
+                    id="subjectModalIcon"
+                >
+                    ➗
+                </div>
+
+                <div>
+
+                    <h2 id="subjectModalTitle">
+                        Pre-Algebra
+                    </h2>
+
+                    <p>
+                        Grade 7 subject workspace
+                    </p>
+
+                </div>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('subjectModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="detail-topics"
+            id="subjectTopics"
+        ></div>
+
+
+        <button
+            class="primary-button"
+            style="margin-top:20px"
+            onclick="openAIFromSubject()"
+        >
+            🤖 Ask AI About This Subject
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     ASSIGNMENT MODAL
+     ========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="assignmentModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    📝 Assignment Builder
+                </h2>
+
+                <p>
+                    Build a classroom-ready assignment.
+                </p>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('assignmentModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Assignment Title
+            </label>
+
+            <input
+                class="form-input"
+                placeholder="Example: Two-Step Equation Practice"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Subject
+            </label>
+
+            <select class="form-select">
+
+                <option>Pre-Algebra</option>
+                <option>English</option>
+                <option>Life Science</option>
+                <option>STEM</option>
+                <option>US Studies</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Teacher Instructions
+            </label>
+
+            <textarea
+                class="form-textarea"
+                placeholder="What should students learn or complete?"
+            ></textarea>
+
+        </div>
+
+
+        <button
+            class="primary-button"
+            onclick="showToast('Assignment builder is ready for AI connection.')"
+        >
+            ✨ Build Assignment
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     LESSON MODAL
+     ========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="lessonModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    📅 Lesson Planner
+                </h2>
+
+                <p>
+                    Create a structured classroom lesson.
+                </p>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('lessonModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Subject
+            </label>
+
+            <select class="form-select">
+
+                <option>Pre-Algebra</option>
+                <option>English</option>
+                <option>Life Science</option>
+                <option>STEM</option>
+                <option>US Studies</option>
+
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Lesson Topic
+            </label>
+
+            <input
+                class="form-input"
+                placeholder="Example: Ecosystems"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Class Length
+            </label>
+
+            <select class="form-select">
+
+                <option>30 minutes</option>
+                <option selected>45 minutes</option>
+                <option>50 minutes</option>
+                <option>60 minutes</option>
+                <option>90 minutes</option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="primary-button"
+            onclick="showToast('Lesson planner is ready for AI connection.')"
+        >
+            ✨ Build Lesson
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     RUBRIC MODAL
+     ========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="rubricModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    📊 Rubric Builder
+                </h2>
+
+                <p>
+                    Create a professional classroom rubric.
+                </p>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('rubricModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Assignment Type
+            </label>
+
+            <input
+                class="form-input"
+                placeholder="Example: Argumentative Essay"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Number of Criteria
+            </label>
+
+            <select class="form-select">
+
+                <option>3</option>
+                <option selected>4</option>
+                <option>5</option>
+                <option>6</option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            class="primary-button"
+            onclick="showToast('Rubric builder is ready for AI connection.')"
+        >
+            ✨ Create Rubric
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CUSTOMIZATION MODAL
+     ========================================================= -->
+
+<div
+    class="modal-backdrop"
+    id="customizeModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <h2>
+                    🎨 Customize Workspace
+                </h2>
+
+                <p>
+                    Make ClassroomOS feel like your workspace.
+                </p>
+
+            </div>
+
+            <button
+                class="close"
+                onclick="closeModal('customizeModal')"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Interface Font
+            </label>
+
+            <div class="font-options">
+
+                <button
+                    class="font-option active"
+                    onclick="setFont('Inter, Arial, sans-serif', this)"
+                    style="font-family:Inter"
+                >
+                    Inter
+                </button>
+
+                <button
+                    class="font-option"
+                    onclick="setFont('Arial, sans-serif', this)"
+                    style="font-family:Arial"
+                >
+                    Arial
+                </button>
+
+                <button
+                    class="font-option"
+                    onclick="setFont('Georgia, serif', this)"
+                    style="font-family:Georgia"
+                >
+                    Georgia
+                </button>
+
+                <button
+                    class="font-option"
+                    onclick="setFont('Verdana, sans-serif', this)"
+                    style="font-family:Verdana"
+                >
+                    Verdana
+                </button>
+
+                <button
+                    class="font-option"
+                    onclick="setFont('Trebuchet MS, sans-serif', this)"
+                    style="font-family:'Trebuchet MS'"
+                >
+                    Trebuchet MS
+                </button>
+
+                <button
+                    class="font-option"
+                    onclick="setFont('Times New Roman, serif', this)"
+                    style="font-family:'Times New Roman'"
+                >
+                    Times New Roman
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Accent Color
+            </label>
+
+            <input
+                type="color"
+                id="accentPicker"
+                value="#7567f8"
+                style="
+                    width:100%;
+                    height:45px;
+                    border:0;
+                    border-radius:10px;
+                    background:#0b101d;
+                "
+                onchange="setAccent(this.value)"
+            >
+
+        </div>
+
+
+        <button
+            class="primary-button"
+            onclick="closeModal('customizeModal')"
+        >
+            Save Appearance
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     AUTHENTICATION
+     ========================================================= -->
+
+<div
+    class="auth-overlay"
+    id="authOverlay"
+>
+
+    <div class="auth-box">
+
+        <div class="auth-logo">
+
+            <h1>
+                Classroom<span>OS</span>
+            </h1>
+
+            <p>
+                Your professional Grade 7 teacher workspace.
+            </p>
+
+        </div>
+
+
+        <div class="auth-tabs">
+
+            <button
+                class="auth-tab active"
+                id="loginTab"
+                onclick="showLogin()"
+            >
+                Login
+            </button>
+
+            <button
+                class="auth-tab"
+                id="signupTab"
+                onclick="showSignup()"
+            >
+                Create Account
+            </button>
+
+        </div>
+
+
+        <!-- LOGIN -->
+
+        <div id="loginForm">
+
+            <div class="form-group">
+
+                <label>
+                    Teacher Name / Username
+                </label>
+
+                <input
+                    class="form-input"
+                    id="loginUsername"
+                    placeholder="Example: Ms. Anderson"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    class="form-input"
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Enter your password"
+                >
+
+            </div>
+
+
+            <button
+                class="primary-button"
+                onclick="login()"
+            >
+                Login
+            </button>
+
+
+            <p
+                style="
+                    color:#7f8aa5;
+                    text-align:center;
+                    font-size:10px;
+                    margin-top:13px;
+                "
+            >
+                Demo login uses your browser's local storage.
+            </p>
+
+        </div>
+
+
+        <!-- SIGNUP -->
+
+        <div
+            id="signupForm"
+            style="display:none"
+        >
+
+            <div class="form-group">
+
+                <label>
+                    Teacher Name
+                </label>
+
+                <input
+                    class="form-input"
+                    id="signupName"
+                    placeholder="Example: Ms. Anderson"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Create Username
+                </label>
+
+                <input
+                    class="form-input"
+                    id="signupUsername"
+                    placeholder="Choose a username"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Create Password
+                </label>
+
+                <input
+                    class="form-input"
+                    id="signupPassword"
+                    type="password"
+                    placeholder="Create a password"
+                >
+
+            </div>
+
+
+            <button
+                class="primary-button"
+                onclick="signup()"
+            >
+                Create Teacher Account
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+></div>
+
+
+<script>
+
+/* =========================================================
+   SUBJECT DATA
+   ========================================================= */
+
+const subjects = {
+
+    "Pre-Algebra": {
+
+        icon: "➗",
+
+        className: "math",
+
+        topics: {
+
+            "Numbers & Operations":
+                "Integers, rational numbers, decimals, fractions, percentages, absolute value, order of operations.",
+
+            "Expressions":
+                "Variables, constants, coefficients, combining like terms, evaluating expressions, distributive property.",
+
+            "Equations":
+                "One-step equations, two-step equations, multi-step equations, inequalities, and word problems.",
+
+            "Ratios & Proportions":
+                "Ratios, rates, unit rates, proportions, percentages, scale drawings.",
+
+            "Geometry":
+                "Area, perimeter, volume, surface area, angles, triangles, coordinate plane.",
+
+            "Data & Probability":
+                "Mean, median, mode, range, graphs, probability, data analysis."
+
+        }
+
+    },
+
+
+    "English": {
+
+        icon: "📖",
+
+        className: "english",
+
+        topics: {
+
+            "Reading":
+                "Main idea, theme, plot, characters, setting, inference, point of view, author purpose.",
+
+            "Writing":
+                "Narrative, informative, argumentative writing, essays, paragraphs, evidence, revision.",
+
+            "Grammar":
+                "Parts of speech, sentence structure, fragments, run-ons, punctuation, capitalization.",
+
+            "Vocabulary":
+                "Context clues, roots, prefixes, suffixes, figurative language, academic vocabulary.",
+
+            "Literature":
+                "Theme, symbolism, conflict, characterization, literary devices and textual evidence.",
+
+            "Communication":
+                "Discussion, presentation, argument, evidence, listening and clear communication."
+
+        }
+
+    },
+
+
+    "Life Science": {
+
+        icon: "🧬",
+
+        className: "science",
+
+        topics: {
+
+            "Cells":
+                "Cell structures, plant cells, animal cells, microscopes and cell functions.",
+
+            "Genetics":
+                "DNA, heredity, traits, genetics, variation and inheritance.",
+
+            "Ecosystems":
+                "Food webs, food chains, populations, communities, energy flow and biodiversity.",
+
+            "Organisms":
+                "Classification, adaptations, structures, functions and interactions.",
+
+            "Earth Science":
+                "Weather, climate, Earth's systems, rocks, minerals and water cycles.",
+
+            "Scientific Investigation":
+                "Hypotheses, variables, data tables, graphs, evidence and lab reports."
+
+        }
+
+    },
+
+
+    "STEM": {
+
+        icon: "⚙️",
+
+        className: "stem",
+
+        topics: {
+
+            "Engineering":
+                "Engineering design process, prototypes, testing, redesign and optimization.",
+
+            "Coding":
+                "Algorithms, logic, variables, conditionals, problem solving and computational thinking.",
+
+            "Robotics":
+                "Robots, sensors, programming, automation and engineering challenges.",
+
+            "Design":
+                "Design thinking, brainstorming, constraints, materials and iteration.",
+
+            "Technology":
+                "Digital systems, technology literacy, data and responsible technology use.",
+
+            "Projects":
+                "Hands-on challenges, teamwork, presentations, testing and reflection."
+
+        }
+
+    },
+
+
+    "US Studies": {
+
+        icon: "🇺🇸",
+
+        className: "history",
+
+        topics: {
+
+            "American History":
+                "Indigenous peoples, colonization, Revolution, Constitution, Civil War, Reconstruction and modern America.",
+
+            "Civics":
+                "Constitution, branches of government, rights, responsibilities, elections and citizenship.",
+
+            "Government":
+                "Federal, state and local government, checks and balances and political institutions.",
+
+            "Geography":
+                "US regions, maps, physical geography, population, migration and resources.",
+
+            "Primary Sources":
+                "Analyzing documents, historical evidence, perspective, context and sourcing.",
+
+            "Economics":
+                "Markets, resources, production, consumers, trade and economic decision making."
+
+        }
+
+    }
+
+};
+
+
+/* =========================================================
+   CURRENT SUBJECT CONTEXT
+   ========================================================= */
+
+let currentSubject = "Pre-Algebra";
+
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+function openModal(id) {
+
+    document.getElementById(id).classList.add("show");
+
+}
+
+function closeModal(id) {
+
+    document.getElementById(id).classList.remove("show");
+
+}
+
+
+/* Close modal by clicking background */
+
+document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+
+    backdrop.addEventListener("click", function(e) {
+
+        if (e.target === backdrop) {
+
+            backdrop.classList.remove("show");
+
+        }
+
+    });
+
+});
+
+
+/* =========================================================
+   SUBJECT OPENING
+   ========================================================= */
+
+function openSubject(subject) {
+
+    currentSubject = subject;
+
+    const data = subjects[subject];
+
+    document.getElementById("subjectModalTitle").textContent =
+        subject;
+
+    document.getElementById("subjectModalIcon").textContent =
+        data.icon;
+
+    document.getElementById("subjectModalIcon").className =
+        "subject-big-icon " + data.className;
+
+    const container =
+        document.getElementById("subjectTopics");
+
+    container.innerHTML = "";
+
+    Object.entries(data.topics).forEach(([title, description]) => {
+
+        const item = document.createElement("div");
+
+        item.className = "detail-topic";
+
+        item.innerHTML = `
+            <strong>${title}</strong>
+            <span>${description}</span>
+        `;
+
+        container.appendChild(item);
+
+    });
+
+    openModal("subjectModal");
+
+}
+
+
+/* =========================================================
+   AI CENTER
+   ========================================================= */
+
+function openAI(type = "general") {
+
+    const subject =
+        currentSubject || "your selected subject";
+
+    document.getElementById("aiContext").textContent =
+        `Context: Grade 7 • ${subject}`;
+
+    const prompt =
+        document.getElementById("aiPrompt");
+
+    const suggestions = {
+
+        assignment:
+            `Create a classroom-ready assignment for Grade 7 ${subject}.`,
+
+        lesson:
+            `Create a complete lesson plan for Grade 7 ${subject}.`,
+
+        writing:
+            `Improve the following teacher-written sentence while preserving my original meaning:\n\n`,
+
+        quiz:
+            `Create a quiz for Grade 7 ${subject}.`,
+
+        grade:
+            `Help me evaluate the following student work using a fair teacher rubric:\n\n`,
+
+        differentiate:
+            `Create differentiated versions of a Grade 7 ${subject} assignment.`
+
+    };
+
+    if (suggestions[type]) {
+
+        prompt.value = suggestions[type];
+
+    }
+
+    document.getElementById("aiResult").style.display =
+        "none";
+
+    openModal("aiModal");
+
+}
+
+
+/* =========================================================
+   AI FROM SUBJECT
+   ========================================================= */
+
+function openAIFromSubject() {
+
+    closeModal("subjectModal");
+
+    openAI();
+
+}
+
+
+/* =========================================================
+   AI DEMO ENGINE
+   =========================================================
+   Replace this function with your real AI API call.
+   ========================================================= */
+
+function runAI() {
+
+    const prompt =
+        document.getElementById("aiPrompt").value.trim();
+
+    if (!prompt) {
+
+        showToast("Enter something for the AI to work on.");
+
+        return;
+
+    }
+
+    const detail =
+        document.getElementById("aiDetail").value;
+
+    const result =
+        document.getElementById("aiResult");
+
+    result.style.display = "block";
+
+    result.textContent =
+`AI TEACHING ASSISTANT
+
+Subject Context:
+Grade 7 ${currentSubject}
+
+Detail Level:
+${detail}
+
+Request:
+${prompt}
+
+--------------------------------
+
+DEMO RESPONSE
+
+Your request has been connected to the ClassroomOS AI context.
+
+The production version should send this request to your secure AI backend with:
+
+• Grade level: 7
+• Subject: ${currentSubject}
+• Topic context
+• Teacher instructions
+• Detail preference
+
+The AI can then generate a classroom-ready response while keeping the teacher in control of the final material.
+
+Suggested next step:
+Connect this interface to your preferred AI API through a secure backend endpoint such as:
+
+POST /api/teacher-ai`;
+
+}
+
+
+/* =========================================================
+   FONT CUSTOMIZATION
+   ========================================================= */
+
+function setFont(font, button) {
+
+    document.documentElement.style.setProperty(
+        "--font",
+        font
+    );
+
+    document.querySelectorAll(".font-option")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    localStorage.setItem(
+        "classroomFont",
+        font
+    );
+
+    showToast("Workspace font updated.");
+
+}
+
+
+/* =========================================================
+   ACCENT COLOR
+   ========================================================= */
+
+function setAccent(color) {
+
+    document.documentElement.style.setProperty(
+        "--accent",
+        color
+    );
+
+    document.documentElement.style.setProperty(
+        "--accent2",
+        color
+    );
+
+    localStorage.setItem(
+        "classroomAccent",
+        color
+    );
+
+}
+
+
+/* =========================================================
+   AUTHENTICATION
+   ========================================================= */
+
+function showLogin() {
+
+    document.getElementById("loginForm").style.display =
+        "block";
+
+    document.getElementById("signupForm").style.display =
+        "none";
+
+    document.getElementById("loginTab").classList.add("active");
+    document.getElementById("signupTab").classList.remove("active");
+
+}
+
+
+function showSignup() {
+
+    document.getElementById("loginForm").style.display =
+        "none";
+
+    document.getElementById("signupForm").style.display =
+        "block";
+
+    document.getElementById("signupTab").classList.add("active");
+    document.getElementById("loginTab").classList.remove("active");
+
+}
+
+
+/*
+    NOTE:
+
+    This is only a front-end prototype.
+
+    Do NOT use localStorage authentication
+    for a real school deployment.
+
+    A production version should use:
+    - secure password hashing
+    - HTTPS
+    - sessions
+    - proper authentication
+    - database storage
+    - school/district authentication
+*/
+
+function signup() {
+
+    const name =
+        document.getElementById("signupName").value.trim();
+
+    const username =
+        document.getElementById("signupUsername").value.trim();
+
+    const password =
+        document.getElementById("signupPassword").value;
+
+    if (!name || !username || !password) {
+
+        showToast("Please complete all fields.");
+
+        return;
+
+    }
+
+    const account = {
+        name,
+        username,
+        password
+    };
+
+    localStorage.setItem(
+        "classroomAccount",
+        JSON.stringify(account)
+    );
+
+    localStorage.setItem(
+        "classroomLoggedIn",
+        "true"
+    );
+
+    updateTeacherProfile(account);
+
+    document.getElementById("authOverlay")
+        .classList.remove("show");
+
+    showToast("Teacher account created.");
+
+}
+
+
+function login() {
+
+    const username =
+        document.getElementById("loginUsername").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const stored =
+        localStorage.getItem("classroomAccount");
+
+    if (!stored) {
+
+        showToast("Create an account first.");
+
+        return;
+
+    }
+
+    const account =
+        JSON.parse(stored);
+
+    if (
+        username === account.username &&
+        password === account.password
+    ) {
+
+        localStorage.setItem(
+            "classroomLoggedIn",
+            "true"
+        );
+
+        updateTeacherProfile(account);
+
+        document.getElementById("authOverlay")
+            .classList.remove("show");
+
+        showToast("Welcome back!");
+
+    } else {
+
+        showToast("Username or password is incorrect.");
+
+    }
+
+}
+
+
+function updateTeacherProfile(account) {
+
+    document.getElementById("profileName")
+        .textContent = account.name;
+
+    document.getElementById("avatar")
+        .textContent =
+        account.name.charAt(0).toUpperCase();
+
+    document.getElementById("welcomeMessage")
+        .textContent =
+        `Good evening, ${account.name}.`;
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent =
+        message;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    }, 2500);
+
+}
+
+
+/* =========================================================
+   TOP
+   ========================================================= */
+
+function scrollToTop() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================================================
+   LOAD SETTINGS
+   ========================================================= */
+
+function loadSettings() {
+
+    const savedFont =
+        localStorage.getItem("classroomFont");
+
+    const savedAccent =
+        localStorage.getItem("classroomAccent");
+
+    if (savedFont) {
+
+        document.documentElement.style.setProperty(
+            "--font",
+            savedFont
+        );
+
+    }
+
+    if (savedAccent) {
+
+        document.documentElement.style.setProperty(
+            "--accent",
+            savedAccent
+        );
+
+        document.documentElement.style.setProperty(
+            "--accent2",
+            savedAccent
+        );
+
+        document.getElementById("accentPicker").value =
+            savedAccent;
+
+    }
+
+
+    const stored =
+        localStorage.getItem("classroomAccount");
+
+    const loggedIn =
+        localStorage.getItem("classroomLoggedIn");
+
+
+    if (stored && loggedIn === "true") {
+
+        updateTeacherProfile(
+            JSON.parse(stored)
+        );
+
+    } else {
+
+        /*
+            Uncomment this if you want to FORCE
+            login before entering the dashboard.
+
+            document.getElementById("authOverlay")
+                .classList.add("show");
+        */
+
+    }
+
+}
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
+
+document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+
+        document.querySelectorAll(".modal-backdrop")
+            .forEach(modal => {
+                modal.classList.remove("show");
+            });
+
+    }
+
+});
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+loadSettings();
+
+</script>
+
+</body>
+</html>
